@@ -1435,7 +1435,7 @@ export default function StudentManagement() {
 
         {/* Disclaimer Message */}
         {!hasSearched && !hasFiltersApplied() && (
-          <div className="group relative overflow-hidden bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border-l-8 border-gradient-to-b from-amber-400 to-orange-500 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1 animate-slide-up">
+          <div className="group relative overflow-hidden bg-gradient-to-r dark:from-amber-900/20 dark:to-orange-900/20 border-l-8 border-gradient-to-b from-amber-400 to-orange-500 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1 animate-slide-up">
             <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             <div className="relative flex items-start space-x-4">
               <div className="p-2 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl">

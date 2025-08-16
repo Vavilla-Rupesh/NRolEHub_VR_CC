@@ -13,7 +13,7 @@ function EventImage({ event }) {
     <>
       {/* Main Event Image Display */}
       {event?.event_image && (
-        <div className="relative group h-[57vh] overflow-hidden rounded-3xl shadow-xl border border-slate-200 dark:border-slate-700">
+        <div className="relative group h-[60vh] overflow-hidden rounded-3xl shadow-xl border border-slate-200 dark:border-slate-700">
           <img
             src={event.event_image}
             alt={event.event_name}
@@ -102,7 +102,7 @@ function EventDetails() {
 
         {/* Event Details Card */}
         <div className="flex-1 relative group rounded-3xl shadow-xl border border-slate-200 dark:border-slate-700">
-          <div className="relative h-[57vh] flex flex-col bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl rounded-3xl border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden animate-in slide-in-from-right duration-500">
+          <div className="relative h-[60vh] flex flex-col bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl rounded-3xl border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden animate-in slide-in-from-right duration-500">
             {/* Header with Gradient */}
             <div className="relative p-4 sm:p-6 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 text-white flex-shrink-0">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-600/90 via-purple-600/90 to-pink-600/90"></div>

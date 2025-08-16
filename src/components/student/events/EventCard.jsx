@@ -209,6 +209,7 @@ import { Calendar, MapPin, Clock } from "lucide-react";
 import { formatDate } from "../../../lib/utils";
 
 function EventCard({ event }) {
+  console.log(event);
   const today = new Date();
   const eventDate = new Date(event.start_date);
 

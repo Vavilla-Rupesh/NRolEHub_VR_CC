@@ -117,7 +117,7 @@ function SubEventList({ subevents, eventId }) {
                       <div className="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-200/50 dark:border-blue-700/50 shadow-lg backdrop-blur-sm transform hover:scale-105 transition-all duration-300">
                         <Users className="h-5 w-5 mr-3 text-blue-600 dark:text-blue-400" />
                         <span className="text-blue-800 dark:text-blue-300 font-semibold">
-                          Team Event ({subevent.min_team_size}-
+                          Team Event ({subevent.min_team_size} -{" "}
                           {subevent.max_team_size} members)
                         </span>
                       </div>

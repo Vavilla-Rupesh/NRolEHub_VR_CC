@@ -1,27 +1,38 @@
 import React, { useState, useRef } from "react";
 import { Eye, X, MousePointer, Save } from "lucide-react";
-// Assuming you have a utility function for classnames, e.g., from shadcn/ui
-// import { cn } from "@/lib/utils";
-// For standalone use, let's define a simple cn function
-const cn = (...classes) => classes.filter(Boolean).join(' ');
 
+// Simple cn function for classnames
+const cn = (...classes) => classes.filter(Boolean).join(' ');
 
 // Mocking toast for standalone example
 const toast = {
   error: (message) => console.error(message),
+  success: (message) => console.log(message),
 };
-
 
 export default function CertificatePreview({
   template,
   onClose,
   onUpdatePositions,
-  type = "", // ✅ FIX: Added default value to prevent crash if type is undefined
+  type = "",
   isTeam = false,
 }) {
   const [selectedField, setSelectedField] = useState(null);
-  // Ensure template.positions is an object, even if it's undefined in props
-  const [positions, setPositions] = useState(template?.positions || {});
+  
+  // Convert pixel positions to relative positions for internal use
+  const [positions, setPositions] = useState(() => {
+    if (!template?.positions || !template?.dimensions) return {};
+    
+    const relativePositions = {};
+    Object.entries(template.positions).forEach(([field, pos]) => {
+      relativePositions[field] = {
+        x: pos.x / template.dimensions.width,
+        y: pos.y / template.dimensions.height
+      };
+    });
+    return relativePositions;
+  });
+  
   const [previewMode, setPreviewMode] = useState(false);
   const imageRef = useRef(null);
 
@@ -49,10 +60,16 @@ export default function CertificatePreview({
       const relX = (e.clientX - rect.left) / rect.width;
       const relY = (e.clientY - rect.top) / rect.height;
 
+      // Ensure the position is within bounds
+      const clampedX = Math.max(0, Math.min(1, relX));
+      const clampedY = Math.max(0, Math.min(1, relY));
+
       setPositions((prev) => ({
         ...prev,
-        [selectedField]: { x: relX, y: relY },
+        [selectedField]: { x: clampedX, y: clampedY },
       }));
+
+      console.log(`Set ${selectedField} position:`, { x: clampedX, y: clampedY });
     }
   };
 
@@ -60,15 +77,13 @@ export default function CertificatePreview({
    * Generates the style for placing an element over the image.
    * It uses percentage-based positioning which scales with the container,
    * preventing any shifting between different view sizes.
-   * @param {object} pos - The position object with x and y properties (0.0 to 1.0)
-   * @returns {object} - The CSS style object
    */
   const getPreviewStyle = (pos) => {
     if (!pos) return {}; // Return empty style if position is not set
     return {
       position: "absolute",
-      left: `${pos.x * 100}%`, // Convert relative X to percentage
-      top: `${pos.y * 100}%`,  // Convert relative Y to percentage
+      left: `${pos.x * 100}%`,
+      top: `${pos.y * 100}%`,
     };
   };
 
@@ -82,10 +97,40 @@ export default function CertificatePreview({
       return;
     }
 
+    if (!template?.dimensions) {
+      toast.error("Template dimensions are missing. Please re-upload the template.");
+      return;
+    }
+
+    // Convert relative positions to pixel positions for the backend
+    const pixelPositions = {};
+    Object.entries(positions).forEach(([field, pos]) => {
+      pixelPositions[field] = {
+        x: Math.round(pos.x * template.dimensions.width),
+        y: Math.round(pos.y * template.dimensions.height)
+      };
+    });
+
+    console.log('Saving positions:', {
+      relative: positions,
+      pixel: pixelPositions,
+      dimensions: template.dimensions
+    });
+
     // Call the parent handler to save the positions
-    onUpdatePositions(positions);
-    // You might want to add a success toast here as well
-    // toast.success("Positions saved successfully!");
+    onUpdatePositions(pixelPositions);
+    toast.success("Positions saved successfully!");
+  };
+
+  const handleRemovePosition = (field) => {
+    setPositions(prev => {
+      const newPositions = { ...prev };
+      delete newPositions[field];
+      return newPositions;
+    });
+    if (selectedField === field) {
+      setSelectedField(null);
+    }
   };
 
   return (
@@ -99,9 +144,13 @@ export default function CertificatePreview({
                 Certificate Preview
               </h2>
               <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mt-1">
-                {type ? type.charAt(0).toUpperCase() + type.slice(1) : ''} Template
-                Configuration
+                {type ? type.charAt(0).toUpperCase() + type.slice(1) : ''} Template Configuration
               </p>
+              {template?.dimensions && (
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  Template: {template.dimensions.width} × {template.dimensions.height}px
+                </p>
+              )}
             </div>
 
             <div className="flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto">
@@ -134,7 +183,8 @@ export default function CertificatePreview({
               {/* Save Button */}
               <button
                 onClick={handleSave}
-                className="group relative overflow-hidden bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border border-white/20 flex-1 sm:flex-none"
+                disabled={Object.keys(positions).length === 0}
+                className="group relative overflow-hidden bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 disabled:from-slate-400 disabled:to-slate-500 text-white rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base font-semibold transition-all duration-300 transform hover:scale-105 disabled:hover:scale-100 shadow-lg hover:shadow-xl border border-white/20 flex-1 sm:flex-none disabled:cursor-not-allowed"
               >
                 <div className="relative flex items-center justify-center space-x-2">
                   <Save className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -164,23 +214,51 @@ export default function CertificatePreview({
                     <h3 className="text-lg sm:text-xl font-bold text-slate-800 dark:text-slate-200 mb-4 sm:mb-6">
                       Field Positioning
                     </h3>
+                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-4">
+                      {selectedField 
+                        ? `Click on the certificate to position "${fields[selectedField]}"` 
+                        : "Select a field to position it on the certificate"
+                      }
+                    </p>
                     <div className="space-y-2 sm:space-y-3 max-h-60 sm:max-h-96 overflow-y-auto custom-scrollbar">
                       {Object.entries(fields).map(([key, label]) => (
-                        <button
-                          key={key}
-                          onClick={() => setSelectedField(key)}
-                          className={cn(
-                            "group relative w-full overflow-hidden rounded-xl px-4 py-3 text-sm sm:text-base font-medium transition-all duration-300 transform hover:scale-[1.02] shadow-md hover:shadow-lg border border-white/20 text-left",
-                            selectedField === key
-                              ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-blue-500/30"
-                              : positions[key]
-                              ? "bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 text-green-800 dark:text-green-200 border-green-200 dark:border-green-700"
-                              : "bg-white/60 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 hover:bg-white/80 dark:hover:bg-slate-700/80"
+                        <div key={key} className="flex items-center space-x-2">
+                          <button
+                            onClick={() => setSelectedField(selectedField === key ? null : key)}
+                            className={cn(
+                              "group relative flex-1 overflow-hidden rounded-xl px-4 py-3 text-sm sm:text-base font-medium transition-all duration-300 transform hover:scale-[1.02] shadow-md hover:shadow-lg border border-white/20 text-left",
+                              selectedField === key
+                                ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-blue-500/30"
+                                : positions[key]
+                                ? "bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 text-green-800 dark:text-green-200 border-green-200 dark:border-green-700"
+                                : "bg-white/60 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 hover:bg-white/80 dark:hover:bg-slate-700/80"
+                            )}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span>{label}</span>
+                              {positions[key] && (
+                                <span className="text-xs opacity-70">
+                                  ({Math.round(positions[key].x * 100)}%, {Math.round(positions[key].y * 100)}%)
+                                </span>
+                              )}
+                            </div>
+                          </button>
+                          {positions[key] && (
+                            <button
+                              onClick={() => handleRemovePosition(key)}
+                              className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                              title={`Remove ${label} position`}
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
                           )}
-                        >
-                          {label}
-                        </button>
+                        </div>
                       ))}
+                    </div>
+                    <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                      <p className="text-xs text-blue-700 dark:text-blue-300">
+                        <strong>Positioned:</strong> {Object.keys(positions).length} / {Object.keys(fields).length} fields
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -189,6 +267,17 @@ export default function CertificatePreview({
               {/* Certificate Display Area */}
               <div className="flex-1 min-w-0">
                 <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl border border-white/20 dark:border-slate-700/50 overflow-hidden">
+                  {!previewMode && (
+                    <div className="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700/50 rounded-lg">
+                      <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                        {selectedField 
+                          ? `🎯 Click anywhere on the certificate to position "${fields[selectedField]}"` 
+                          : "📝 Select a field from the left panel to start positioning"
+                        }
+                      </p>
+                    </div>
+                  )}
+                  
                   <div className="relative overflow-auto max-h-[60vh] lg:max-h-[70vh] custom-scrollbar">
                     {/* This container holds the image and the absolutely positioned elements */}
                     <div className="relative inline-block min-w-full">
@@ -199,7 +288,7 @@ export default function CertificatePreview({
                         className={cn(
                           "max-w-full h-auto rounded-xl shadow-lg transition-all duration-300",
                           !previewMode && selectedField
-                            ? "cursor-crosshair hover:shadow-2xl"
+                            ? "cursor-crosshair hover:shadow-2xl ring-2 ring-blue-300 dark:ring-blue-600"
                             : "cursor-default"
                         )}
                         onClick={handleImageClick}
@@ -215,12 +304,25 @@ export default function CertificatePreview({
                           >
                             <div className="relative transform -translate-x-1/2 -translate-y-1/2 animate-bounce-gentle">
                               {/* The marker dot */}
-                              <div className="w-4 h-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full shadow-lg border-2 border-white relative">
-                                <div className="absolute inset-0 bg-blue-400 rounded-full animate-ping opacity-75"></div>
+                              <div className={cn(
+                                "w-4 h-4 rounded-full shadow-lg border-2 border-white relative transition-all duration-300",
+                                selectedField === field 
+                                  ? "bg-gradient-to-r from-red-500 to-pink-500 scale-125"
+                                  : "bg-gradient-to-r from-blue-500 to-purple-500"
+                              )}>
+                                <div className={cn(
+                                  "absolute inset-0 rounded-full animate-ping opacity-75",
+                                  selectedField === field ? "bg-red-400" : "bg-blue-400"
+                                )}></div>
                               </div>
                               {/* The text label */}
                               <div className="mt-2 whitespace-nowrap text-center">
-                                <span className="bg-gradient-to-r from-slate-800 to-slate-900 text-white px-2 py-1 rounded-lg text-xs font-medium shadow-lg border border-white/20">
+                                <span className={cn(
+                                  "px-2 py-1 rounded-lg text-xs font-medium shadow-lg border border-white/20",
+                                  selectedField === field
+                                    ? "bg-gradient-to-r from-red-600 to-pink-600 text-white"
+                                    : "bg-gradient-to-r from-slate-800 to-slate-900 text-white"
+                                )}>
                                   {fields[field]}
                                 </span>
                               </div>
@@ -233,7 +335,6 @@ export default function CertificatePreview({
                         Object.entries(positions).map(([field, pos]) => {
                           const style = getPreviewStyle(pos);
                           let content = "";
-                          // Base class plus a transform to center the text on the point
                           let className = "absolute font-semibold drop-shadow-lg animate-fade-in whitespace-nowrap transform -translate-x-1/2 -translate-y-1/2 ";
 
                           switch (field) {
@@ -304,6 +405,37 @@ export default function CertificatePreview({
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slide-up {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes bounce-gentle {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-2px); }
+        }
+        
+        .animate-fade-in { animation: fade-in 0.3s ease-out; }
+        .animate-slide-up { animation: slide-up 0.5s ease-out; }
+        .animate-bounce-gentle { animation: bounce-gentle 2s ease-in-out infinite; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { 
+          background: rgba(148, 163, 184, 0.5); 
+          border-radius: 2px; 
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { 
+          background: rgba(148, 163, 184, 0.7); 
+        }
+      `}</style>
     </div>
   );
 }

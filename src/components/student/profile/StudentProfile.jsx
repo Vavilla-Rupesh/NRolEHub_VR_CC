@@ -138,127 +138,228 @@ function StudentProfile() {
   };
 
   return (
-    <div className="min-h-[80vh] p-6 flex items-center justify-center">
-      <div className="glass-card w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl overflow-hidden">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Left side - User Info and Points History */}
-          <div className="space-y-6">
+    <div className="min-h-screen p-3 sm:p-6 lg:p-8">
+      {/* Animated Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute top-40 left-40 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+      </div>
+
+      {/* Main Content */}
+      <div className="relative z-10 max-w-7xl mx-auto">
+        {/* Header Section */}
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-pulse mb-4">
+            Student Dashboard
+          </h1>
+          <p className="text-gray-500dark:text-slate-300 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto">
+            Track your achievements, monitor your progress, and celebrate your success
+          </p>
+        </div>
+
+        {loading ? (
+          <div className="flex items-center justify-center min-h-[50vh]">
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full blur-3xl animate-pulse" />
-              <div className="relative flex items-center space-x-4">
-                <div className="h-20 w-20 rounded-full bg-primary/10 flex items-center justify-center transform hover:scale-110 transition-transform duration-300">
-                  <User className="h-10 w-10 text-primary animate-pulse" />
+              <div className="w-20 h-20 border-4 border-purple-200 rounded-full"></div>
+              <div className="w-20 h-20 border-4 border-purple-500 rounded-full animate-spin absolute top-0 left-0 border-t-transparent"></div>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
+            {/* Profile Card */}
+            <div className="xl:col-span-2 space-y-6">
+              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/50 via-purple-900/20 to-slate-800/50 backdrop-blur-xl border border-slate-700/50 shadow-2xl hover:shadow-purple-500/20 transition-all duration-500">
+                {/* Animated border effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-opacity duration-500 animate-pulse"></div>
+                
+                <div className="relative p-6 sm:p-8">
+                  {/* User Info */}
+                  <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6 mb-8">
+                    <div className="relative group/avatar">
+                      <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full blur group-hover/avatar:blur-md transition-all duration-300"></div>
+                      <div className="relative h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center transform group-hover/avatar:scale-110 transition-all duration-300 shadow-xl">
+                        <User className="h-10 w-10 sm:h-12 sm:w-12 text-white animate-pulse" />
+                      </div>
+                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full border-2 border-slate-800 animate-bounce"></div>
+                    </div>
+                    
+                    <div className="text-center sm:text-left flex-grow">
+                      <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-2">
+                        {user?.username}
+                      </h2>
+                      <div className="flex items-center justify-center sm:justify-start space-x-2 text-slate-300">
+                        <Mail className="h-4 w-4 text-cyan-400" />
+                        <span className="text-white dark:text-slate-300 text-sm sm:text-base break-all">{user?.email}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Stats Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    <div className="group/stat relative overflow-hidden rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-600/10 backdrop-blur-sm border border-cyan-500/20 p-4 sm:p-6 hover:border-cyan-400/40 transition-all duration-300 hover:transform hover:scale-105">
+                      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover/stat:opacity-100 transition-opacity duration-300"></div>
+                      <div className="relative">
+                        <div className="flex items-center space-x-3 mb-3">
+                          <div className="p-2 rounded-lg bg-cyan-500/20 group-hover/stat:bg-cyan-500/30 transition-colors duration-300">
+                            <Calendar className="h-5 w-5 text-cyan-400 group-hover/stat:scale-110 transition-transform duration-300" />
+                          </div>
+                          <span className="font-semibold text-slate-200">Events Participated</span>
+                        </div>
+                        <p className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                          {registeredEvents.length}
+                        </p>
+                        <div className="w-full bg-slate-700/50 rounded-full h-2 mt-3">
+                          <div className="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full animate-pulse" style={{width: `${Math.min((registeredEvents.length / 10) * 100, 100)}%`}}></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="group/stat relative overflow-hidden rounded-xl bg-gradient-to-br from-yellow-500/10 to-orange-600/10 backdrop-blur-sm border border-yellow-500/20 p-4 sm:p-6 hover:border-yellow-400/40 transition-all duration-300 hover:transform hover:scale-105">
+                      <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent opacity-0 group-hover/stat:opacity-100 transition-opacity duration-300"></div>
+                      <div className="relative">
+                        <div className="flex items-center space-x-3 mb-3">
+                          <div className="p-2 rounded-lg bg-yellow-500/20 group-hover/stat:bg-yellow-500/30 transition-colors duration-300">
+                            <Trophy className="h-5 w-5 text-yellow-400 group-hover/stat:scale-110 transition-transform duration-300 group-hover/stat:rotate-12" />
+                          </div>
+                          <span className="font-semibold text-slate-200">Events Won</span>
+                        </div>
+                        <p className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
+                          {registeredEvents.filter((reg) => reg.rank).length}
+                        </p>
+                        <div className="w-full bg-slate-700/50 rounded-full h-2 mt-3">
+                          <div className="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 rounded-full animate-pulse" style={{width: `${Math.min((registeredEvents.filter((reg) => reg.rank).length / Math.max(registeredEvents.length, 1)) * 100, 100)}%`}}></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex-grow">
-                  {" "}
-                  {/* Added flex-grow here */}
-                  <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                    {user?.username}
-                  </h2>
-                  <div className="flex items-center space-x-1 mt-2">
-                    <Mail className="h-4 w-3 text-gray-400" />
-                    <span className="text-gray-600 dark:text-gray-300">
-                      {user?.email}
-                    </span>{" "}
-                    {/* Added truncate */}
+              </div>
+
+              {/* Upcoming Events */}
+              {upcomingEvents.length > 0 && (
+                <div className="rounded-2xl bg-gradient-to-br from-slate-800/50 via-indigo-900/20 to-slate-800/50 backdrop-blur-xl border border-slate-700/50 shadow-2xl p-6 sm:p-8">
+                  <h3 className="text-xl sm:text-2xl font-bold text-slate-200 mb-6 flex items-center space-x-2">
+                    <Calendar className="h-6 w-6 text-indigo-400" />
+                    <span>Upcoming Events</span>
+                  </h3>
+                  <div className="space-y-3">
+                    {upcomingEvents.slice(0, 3).map((event, index) => (
+                      <div key={event.id} className="group relative overflow-hidden rounded-xl bg-slate-800/30 border border-slate-600/30 p-4 hover:border-indigo-400/40 transition-all duration-300 hover:transform hover:translate-x-2">
+                        <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div className="relative flex items-center justify-between">
+                          <div>
+                            <h4 className="font-semibold text-white dark:text-slate-200 group-hover:text-indigo-300 transition-colors duration-300">
+                              {event.title}
+                            </h4>
+                            <p className="text-sm  text-white dark:text-slate-200 mt-1">
+                              {formatDate(new Date(event.start_date))}
+                            </p>
+                          </div>
+                          <div className="text-indigo-400 group-hover:scale-110 transition-transform duration-300">
+                            <Star className="h-5 w-5" />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Points Display */}
+            <div className="xl:col-span-1">
+              <div className="sticky top-6">
+                <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-900/50 via-pink-900/30 to-purple-900/50 backdrop-blur-xl border border-purple-500/30 shadow-2xl hover:shadow-purple-500/30 transition-all duration-500">
+                  {/* Animated gradient background */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-pink-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  {/* Floating stars */}
+                  <div className="absolute top-4 right-4">
+                    <Star className="h-6 w-6 text-yellow-400 animate-spin-slow" />
+                  </div>
+                  <div className="absolute top-8 left-6">
+                    <Star className="h-4 w-4 text-pink-400 animate-bounce" style={{animationDelay: '1s'}} />
+                  </div>
+                  <div className="absolute bottom-8 right-8">
+                    <Star className="h-3 w-3 text-cyan-400 animate-pulse" style={{animationDelay: '2s'}} />
+                  </div>
+                  
+                  <div className="relative p-6 sm:p-8 text-center">
+                    <div className="mb-6">
+                      <div className="relative mx-auto w-20 h-20 mb-4">
+                        <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur animate-pulse"></div>
+                        <div className="relative bg-gradient-to-br from-purple-600 to-pink-600 rounded-full p-4 shadow-xl">
+                          <Award className="h-12 w-12 text-white animate-bounce" />
+                        </div>
+                      </div>
+                      <h3 className="text-xl sm:text-2xl font-bold text-slate-200 mb-2">
+                        Total Points
+                      </h3>
+                    </div>
+
+                    {/* Points Display */}
+                    <div className="relative mb-6">
+                      <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 blur-2xl opacity-30 animate-pulse"></div>
+                      <div className="relative">
+                        <p className="text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-pulse mb-2">
+                          {totalPoints}
+                        </p>
+                        <div className="w-32 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto animate-pulse"></div>
+                      </div>
+                    </div>
+
+                    {/* Points Information */}
+                    <div className="space-y-4">
+                      <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-600/30">
+                        <p className="text-sm text-slate-300 leading-relaxed">
+                          Points are calculated from your top 2 events each day!
+                        </p>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 gap-3">
+                        <div className="flex items-center justify-between bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-lg p-3 border border-yellow-500/20">
+                          <span className="text-sm font-medium text-slate-200">Ranked Events</span>
+                          <span className="px-2 py-1 bg-yellow-500/20 rounded-full text-yellow-400 text-sm font-bold">3 pts</span>
+                        </div>
+                        <div className="flex items-center justify-between bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-lg p-3 border border-blue-500/20">
+                          <span className="text-sm font-medium text-slate-200">Participation</span>
+                          <span className="px-2 py-1 bg-blue-500/20 rounded-full text-blue-400 text-sm font-bold">2 pts</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-1 gap-4">
-              <div
-                className={cn(
-                  "p-4 rounded-xl border border-white/20 dark:border-gray-700/20",
-                  "bg-gradient-to-br from-primary/10 to-secondary/10",
-                  "transform hover:scale-105 transition-all duration-300"
-                )}
-              >
-                <div className="flex items-center space-x-2">
-                  <Calendar className="h-5 w-5 text-primary animate-pulse" />
-                  <span className="font-medium">Events Participated</span>
-                </div>
-                <p className="text-3xl font-bold mt-2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                  {registeredEvents.length}
-                </p>
-              </div>
-
-              <div
-                className={cn(
-                  "p-4 rounded-xl border border-white/20 dark:border-gray-700/20",
-                  "bg-gradient-to-br from-yellow-500/10 to-amber-500/10",
-                  "transform hover:scale-105 transition-all duration-300"
-                )}
-              >
-                <div className="flex items-center space-x-2">
-                  <Trophy className="h-5 w-5 text-yellow-500 animate-pulse" />
-                  <span className="font-medium">Events Won</span>
-                </div>
-                <p className="text-3xl font-bold mt-2 bg-gradient-to-r from-yellow-500 to-amber-500 bg-clip-text text-transparent">
-                  {registeredEvents.filter((reg) => reg.rank).length}
-                </p>
-              </div>
-            </div>
-
-            {/* Points History */}
-            {/* <div className="mt-8 space-y-4">
-          <h3 className="text-lg font-semibold">Points History</h3>
-          <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
-            {Object.entries(pointsByDate).map(([date, { events, totalPoints }]) => (
-              <div key={date} className="p-4 rounded-lg bg-white/50 dark:bg-gray-800/50 border border-white/20 dark:border-gray-700/20 backdrop-blur-sm">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="font-medium">{formatDate(new Date(date))}</span>
-                  <span className="text-sm font-bold text-primary">{totalPoints} points</span>
-                </div>
-                <div className="space-y-2">
-                  {events.map((event, idx) => (
-                    <div key={idx} className="flex justify-between items-center text-sm">
-                      <span className="text-gray-600 dark:text-gray-400">{event.event_name}</span>
-                      <div className="flex items-center space-x-2">
-                        <span className={cn("px-2 py-1 rounded-full text-xs", event.rank ? "bg-yellow-100 text-yellow-800" : "bg-blue-100 text-blue-800")}>
-                          {event.type}
-                        </span>
-                        <span className="font-medium">{event.points} pts</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
           </div>
-        </div> */}
-          </div>
-
-          {/* Right side - Points Animation */}
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-secondary/20 to-primary/20 rounded-full blur-3xl animate-gradient" />
-            <div className="relative flex flex-col items-center justify-center h-full p-6 rounded-xl border border-white/20 dark:border-gray-700/20 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
-              <div className="absolute -top-4 -right-4">
-                <Star className="h-8 w-8 text-yellow-500 animate-spin-slow" />
-              </div>
-              <Award className="h-16 w-16 text-primary mb-4 animate-bounce" />
-              <h3 className="text-xl font-bold text-gray-700 dark:text-gray-300">
-                Total Points
-              </h3>
-              <div className="relative mt-4">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary blur-lg opacity-50" />
-                <p className="relative text-6xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent animate-pulse">
-                  {totalPoints}
-                </p>
-              </div>
-              <p className="mt-4 text-sm text-gray-500 dark:text-gray-400 text-center">
-                Points are calculated from your top 2 events each day!
-                <br />
-                <span className="text-xs">
-                  Ranked Events: 3 points
-                  <br />
-                  Participation: 2 points
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
+
+      <style jsx>{`
+        @keyframes blob {
+          0% { transform: translate(0px, 0px) scale(1); }
+          33% { transform: translate(30px, -50px) scale(1.1); }
+          66% { transform: translate(-20px, 20px) scale(0.9); }
+          100% { transform: translate(0px, 0px) scale(1); }
+        }
+        @keyframes spin-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        .animate-blob {
+          animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+          animation-delay: 4s;
+        }
+        .animate-spin-slow {
+          animation: spin-slow 3s linear infinite;
+        }
+      `}</style>
     </div>
   );
 }

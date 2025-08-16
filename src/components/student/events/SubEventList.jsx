@@ -1,25 +1,24 @@
-import React from 'react';
-import SubEventCard from './SubEventCard';
-import { Download } from 'lucide-react';
-import api from '../../../lib/api';
-import toast from 'react-hot-toast';
+import React from "react";
+import SubEventCard from "./SubEventCard";
+import { Download } from "lucide-react";
+import api from "../../../lib/api";
+import toast from "react-hot-toast";
 
 function SubEventList({ subevents, eventId, onUpdate, event }) {
-
-       return( 
-        <div className="space-y-6">
-          {subevents.map((subevent) => (
-            <SubEventCard
-              key={subevent.id}
-              subevent={subevent}
-              eventId={eventId}
-              onUpdate={onUpdate}
-              event={event}
-            />
-          ))}
+  return (
+    <div className="space-y-6">
+      {subevents.map((subevent) => (
+        <SubEventCard
+          key={subevent.id}
+          subevent={subevent}
+          eventId={eventId}
+          onUpdate={onUpdate}
+          event={event}
+        />
+      ))}
 
       {/* Right side - Event Image */}
-      {event?.event_image && (
+      {/* {event?.event_image && (
         <div className="hidden md:block md:col-span-5 sticky top-24">
           <div className="glass-card overflow-hidden">
             <img
@@ -35,7 +34,7 @@ function SubEventList({ subevents, eventId, onUpdate, event }) {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

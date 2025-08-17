@@ -1,5 +1,34 @@
+"use client";
 import React from "react";
-import { Calendar, Mail, Phone } from "lucide-react";
+import { Calendar, Mail, Phone, Users } from "lucide-react";
+import { AnimatedTooltip } from "../ui/AnimatedTooltip";
+
+const people = [
+  {
+    id: 1,
+    name: "Vavilla Rupesh",
+    designation: "Frontend Developer and Team Lead",
+    image: "https://avatars.githubusercontent.com/u/137624310?v=4",
+  },
+  {
+    id: 2,
+    name: "Mukesh Nagineni",
+    designation: "Backend Developer",
+    image: "https://avatars.githubusercontent.com/u/115940151?v=4",
+  },
+  {
+    id: 3,
+    name: "Bhuvan Raj",
+    designation: "Support Engineer",
+    image: "https://avatars.githubusercontent.com/u/153586164?v=4",
+  },
+  {
+    id: 4,
+    name: "Prasanth",
+    designation: "Support Engineer",
+    image: "https://media.licdn.com/dms/image/v2/D4E35AQFNxsrcQn8WsQ/profile-framedphoto-shrink_800_800/profile-framedphoto-shrink_800_800/0/1727840710977?e=1756026000&v=beta&t=vGH2HVtdWYh39B1j7bnNw8T17AOt9ocbjxXBKXo0KEY",
+  },
+];
 
 function Footer() {
   return (
@@ -34,6 +63,17 @@ function Footer() {
         @keyframes pulse {
           0%, 100% { transform: scale(1); }
           50% { transform: scale(1.05); }
+        }
+
+        @keyframes fadeInUp {
+          from { 
+            opacity: 0; 
+            transform: translateY(30px); 
+          }
+          to { 
+            opacity: 1; 
+            transform: translateY(0); 
+          }
         }
 
         .premium-footer {
@@ -156,6 +196,7 @@ function Footer() {
         
         .footer-section:nth-child(2) { animation-delay: 0.2s; }
         .footer-section:nth-child(3) { animation-delay: 0.4s; }
+        .footer-section:nth-child(4) { animation-delay: 0.6s; }
 
         .footer-heading {
           font-size: 0.875rem;
@@ -166,6 +207,9 @@ function Footer() {
           margin-bottom: 1rem;
           position: relative;
           transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
         }
         
         .dark .footer-heading {
@@ -291,6 +335,99 @@ function Footer() {
           color: #a78bfa;
         }
 
+        .team-showcase {
+          text-align: center;
+          padding: 1.5rem 0;
+          border-radius: 1rem;
+          background: linear-gradient(135deg, 
+            rgba(99, 102, 241, 0.05) 0%, 
+            rgba(168, 85, 247, 0.03) 50%,
+            rgba(236, 72, 153, 0.02) 100%);
+          border: 1px solid rgba(99, 102, 241, 0.1);
+          transition: all 0.3s ease;
+          animation: fadeInUp 0.8s ease-out 0.4s both;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .dark .team-showcase {
+          background: linear-gradient(135deg, 
+            rgba(139, 92, 246, 0.1) 0%, 
+            rgba(168, 85, 247, 0.05) 50%,
+            rgba(236, 72, 153, 0.03) 100%);
+          border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .team-showcase:before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: radial-gradient(circle, rgba(99, 102, 241, 0.03) 0%, transparent 70%);
+          animation: float 6s ease-in-out infinite;
+          pointer-events: none;
+        }
+
+        .team-showcase:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 25px rgba(99, 102, 241, 0.15);
+          border-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .team-title {
+          font-size: 1rem;
+          font-weight: 600;
+          color: #374151;
+          margin-bottom: 0.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          transition: all 0.3s ease;
+        }
+
+        .dark .team-title {
+          color: #e5e7eb;
+        }
+
+        .team-subtitle {
+          font-size: 0.8rem;
+          color: #6b7280;
+          margin-bottom: 1.5rem;
+          transition: all 0.3s ease;
+        }
+
+        .dark .team-subtitle {
+          color: #9ca3af;
+        }
+
+        .team-showcase:hover .team-title {
+          color: #6366f1;
+          transform: translateY(-1px);
+        }
+
+        .dark .team-showcase:hover .team-title {
+          color: #a78bfa;
+        }
+
+        .team-showcase:hover .team-subtitle {
+          color: #6366f1;
+        }
+
+        .dark .team-showcase:hover .team-subtitle {
+          color: #a78bfa;
+        }
+
+        .tooltip-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          z-index: 2;
+        }
+
         .footer-divider {
           border-color: rgba(99, 102, 241, 0.2);
           margin-top: 2rem;
@@ -303,7 +440,7 @@ function Footer() {
 
         .footer-copyright {
           text-align: center;
-          animation: slideUp 0.8s ease-out 0.6s both;
+          animation: slideUp 0.8s ease-out 0.8s both;
         }
         
         .copyright-text {
@@ -332,7 +469,13 @@ function Footer() {
         
         @media (min-width: 768px) {
           .footer-grid {
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .footer-grid {
+            grid-template-columns: 2fr 1fr 1fr 2fr;
           }
         }
 
@@ -360,23 +503,18 @@ function Footer() {
           .footer-heading {
             font-size: 0.8rem;
           }
-        }
 
-        /* Enhanced visibility for both themes */
-        .text-visible {
-          color: #374151;
-        }
-        
-        .dark .text-visible {
-          color: #e5e7eb;
-        }
-        
-        .text-muted {
-          color: #6b7280;
-        }
-        
-        .dark .text-muted {
-          color: #9ca3af;
+          .team-showcase {
+            margin-top: 1rem;
+          }
+
+          .team-title {
+            font-size: 0.9rem;
+          }
+
+          .team-subtitle {
+            font-size: 0.75rem;
+          }
         }
 
         .premium-footer .footer-container {
@@ -415,13 +553,16 @@ function Footer() {
                 <span className="premium-gradient-text">NRolEHub</span>
               </a>
               <p className="footer-description">
-                Connecting campus events with students through innovation
+                Connecting campus events with students through
               </p>
-              <p className="footer-description">and excellence</p>
+              <p className="footer-description">innovation and excellence</p>
             </div>
 
             <div className="footer-section">
-              <h3 className="footer-heading">Contact</h3>
+              <h3 className="footer-heading">
+                <Mail className="w-4 h-4" />
+                Contact
+              </h3>
               <ul className="space-y-1">
                 <li className="contact-item">
                   <Mail className="contact-icon" />
@@ -448,6 +589,21 @@ function Footer() {
                   </a>
                 </li>
               </ul>
+            </div>
+
+            <div className="footer-section">
+              <div className="team-showcase">
+                <h3 className="team-title">
+                  <Users className="w-4 h-4" />
+                  Meet Our Team
+                </h3>
+                <p className="team-subtitle">
+                  The amazing people behind NRolEHub
+                </p>
+                <div className="tooltip-container">
+                  <AnimatedTooltip items={people||[]} />
+                </div>
+              </div>
             </div>
           </div>
 

@@ -26,6 +26,14 @@ services:
         sync: false
       - key: EMAIL_PASSWORD
         sync: false
+      - key: SUPER_ADMIN_EMAIL_1
+        sync: false
+      - key: SUPER_ADMIN_PASSWORD_1
+        sync: false
+      - key: SUPER_ADMIN_EMAIL_2
+        sync: false
+      - key: SUPER_ADMIN_PASSWORD_2
+        sync: false
 
 databases:
   - name: nrolehub

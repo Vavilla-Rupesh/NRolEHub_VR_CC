@@ -16,18 +16,18 @@ const people = [
     designation: "Backend Developer",
     image: "https://avatars.githubusercontent.com/u/115940151?v=4",
   },
-  {
-    id: 3,
-    name: "Bhuvan Raj",
-    designation: "Support Engineer",
-    image: "https://avatars.githubusercontent.com/u/153586164?v=4",
-  },
-  {
-    id: 4,
-    name: "Prasanth",
-    designation: "Support Engineer",
-    image: "https://media.licdn.com/dms/image/v2/D4E35AQFNxsrcQn8WsQ/profile-framedphoto-shrink_800_800/profile-framedphoto-shrink_800_800/0/1727840710977?e=1756026000&v=beta&t=vGH2HVtdWYh39B1j7bnNw8T17AOt9ocbjxXBKXo0KEY",
-  },
+  // {
+  //   id: 3,
+  //   name: "Bhuvan Raj",
+  //   designation: "Support Engineer",
+  //   image: "https://avatars.githubusercontent.com/u/153586164?v=4",
+  // },
+  // {
+  //   id: 4,
+  //   name: "Prasanth",
+  //   designation: "Support Engineer",
+  //   image: "https://media.licdn.com/dms/image/v2/D4E35AQFNxsrcQn8WsQ/profile-framedphoto-shrink_800_800/profile-framedphoto-shrink_800_800/0/1727840710977?e=1756026000&v=beta&t=vGH2HVtdWYh39B1j7bnNw8T17AOt9ocbjxXBKXo0KEY",
+  // },
 ];
 
 function Footer() {

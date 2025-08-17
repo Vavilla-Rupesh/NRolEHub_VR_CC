@@ -107,7 +107,13 @@ export default function PremiumLandingPage() {
               <img
                 src="../banner.png"
                 alt="Narayana Banner"
-                className="w-full object-contain"
+                className="w-full object-contain dark:hidden"
+                style={{ marginTop: 0 }}
+              />
+              <img
+                src="../bannerdark.png"
+                alt="Narayana Banner"
+                className="w-full object-contain dark:block hidden"
                 style={{ marginTop: 0 }}
               />
               <h1 className="text-5xl md:text-7xl font-black text-slate-900 dark:text-white leading-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400">

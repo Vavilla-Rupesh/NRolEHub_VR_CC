@@ -91,7 +91,7 @@ function EventRegistration() {
   return (
     <div className="space-y-8">
       {/* Search */}
-      <div className="flex justify-between items-center">
+      <div className="lg:flex justify-between items-center">
         <div className="group">
           <h1 className="text-4xl lg:text-5xl font-black bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent flex items-center transform transition-all duration-500 hover:scale-105">
             <Calendar className="h-8 w-8 lg:h-10 lg:w-10 mr-3 text-blue-600 dark:text-blue-400 group-hover:rotate-12 transition-transform duration-300" />

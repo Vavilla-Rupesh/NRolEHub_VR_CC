@@ -145,6 +145,15 @@ export default function UserMenu() {
           z-index: 1;
           position: relative;
         }
+        
+        .profile-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 50%;
+          z-index: 1;
+          position: relative;
+        }
 
         .username-text {
           font-weight: 600;
@@ -350,7 +359,15 @@ export default function UserMenu() {
           className="premium-user-button ripple-effect"
         >
           <div className="user-avatar">
-            <User className="user-icon" />
+            {user.profile_image ? (
+              <img 
+                src={user.profile_image} 
+                alt="Profile" 
+                className="profile-image"
+              />
+            ) : (
+              <User className="user-icon" />
+            )}
             <div className="status-indicator"></div>
           </div>
           <span className="ml-2 username-text hidden md:block">{user.username}</span>

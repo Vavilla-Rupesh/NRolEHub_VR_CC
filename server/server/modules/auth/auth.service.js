@@ -422,3 +422,85 @@ exports.rejectAdmin = async (pendingAdminId, superAdminId, reason) => {
     throw error;
   }
 };
+
+exports.updateProfile = async (userId, updateData, userRole) => {
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Define allowed fields based on role
+    const allowedFields = {
+      student: ['username', 'mobile_number'],
+      admin: ['username'],
+      super_admin: ['username']
+    };
+
+    const fieldsToUpdate = {};
+    const allowed = allowedFields[userRole] || [];
+
+    // Only update allowed fields
+    allowed.forEach(field => {
+      if (updateData[field] !== undefined) {
+        fieldsToUpdate[field] = updateData[field];
+      }
+    });
+
+    if (Object.keys(fieldsToUpdate).length === 0) {
+      throw new Error('No valid fields to update');
+    }
+
+    await user.update(fieldsToUpdate);
+    
+    // Return user without password
+    const userResponse = user.toJSON();
+    delete userResponse.password;
+    return userResponse;
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    throw error;
+  }
+};
+
+exports.changePassword = async (userId, currentPassword, newPassword) => {
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Verify current password
+    const isValidPassword = await bcrypt.compare(currentPassword, user.password);
+    if (!isValidPassword) {
+      throw new Error('Current password is incorrect');
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    
+    await user.update({ password: hashedPassword });
+  } catch (error) {
+    console.error('Error changing password:', error);
+    throw error;
+  }
+};
+
+exports.updateProfileImage = async (userId, filename) => {
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    await user.update({ profile_image: filename });
+    
+    // Return user without password
+    const userResponse = user.toJSON();
+    delete userResponse.password;
+    return userResponse;
+  } catch (error) {
+    console.error('Error updating profile image:', error);
+    throw error;
+  }
+};

@@ -13,7 +13,8 @@
 const express = require('express');
 const router = express.Router();
 const AuthController = require('../../modules/auth/auth.controller');
-const AuthMiddleware = require('../middleware/auth.middleware')
+const AuthMiddleware = require('../middleware/auth.middleware');
+const upload = require('../../utils/multer');
 
 // User Authentication
 router.post('/register', AuthController.register);
@@ -21,6 +22,15 @@ router.post('/verifyOTP', AuthController.verifyOTP);
 router.post('/resend-otp', AuthController.resendOTP);
 router.post('/login', AuthController.login);
 router.get('/profile', AuthMiddleware.authenticate, AuthController.getProfile);
+
+// Profile Management
+router.put('/profile', AuthMiddleware.authenticate, AuthController.updateProfile);
+router.put('/profile/password', AuthMiddleware.authenticate, AuthController.changePassword);
+router.post('/profile/image', 
+  AuthMiddleware.authenticate, 
+  upload.single('profile_image'),
+  AuthController.updateProfileImage
+);
 
 // Forgot Password Routes
 router.post('/forgot-password', AuthController.forgotPassword);

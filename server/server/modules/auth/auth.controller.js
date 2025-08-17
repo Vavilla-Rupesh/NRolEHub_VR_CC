@@ -1,5 +1,6 @@
 const AuthService = require('./auth.service');
 const { sendOTP, sendRegistrationOTP, sendAdminApprovalEmail, sendAdminRejectionEmail } = require('../../utils/mailer');
+const bcrypt = require('bcrypt');
 
 exports.register = async (req, res) => {
   try {
@@ -261,6 +262,78 @@ exports.rejectAdmin = async (req, res) => {
     });
   } catch (error) {
     console.error('Reject admin error:', error);
+    res.status(400).json({ message: error.message });
+  }
+};
+
+exports.updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { username, mobile_number } = req.body;
+    
+    // Validate based on user role
+    if (req.user.role === 'student') {
+      if (!username || !mobile_number) {
+        return res.status(400).json({ 
+          message: 'Username and mobile number are required' 
+        });
+      }
+      
+      // Validate mobile number format
+      if (!/^[0-9]{10}$/.test(mobile_number)) {
+        return res.status(400).json({ 
+          message: 'Invalid mobile number format. Must be 10 digits.' 
+        });
+      }
+    }
+    
+    const updatedUser = await AuthService.updateProfile(userId, req.body, req.user.role);
+    res.status(200).json({ 
+      message: 'Profile updated successfully',
+      user: updatedUser
+    });
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(400).json({ message: error.message });
+  }
+};
+
+exports.changePassword = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { currentPassword, newPassword } = req.body;
+    
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ 
+        message: 'Current password and new password are required' 
+      });
+    }
+    
+    await AuthService.changePassword(userId, currentPassword, newPassword);
+    res.status(200).json({ message: 'Password changed successfully' });
+  } catch (error) {
+    console.error('Change password error:', error);
+    res.status(400).json({ message: error.message });
+  }
+};
+
+exports.updateProfileImage = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    if (!req.file) {
+      return res.status(400).json({ 
+        message: 'Profile image is required' 
+      });
+    }
+    
+    const updatedUser = await AuthService.updateProfileImage(userId, req.file.filename);
+    res.status(200).json({ 
+      message: 'Profile image updated successfully',
+      user: updatedUser
+    });
+  } catch (error) {
+    console.error('Update profile image error:', error);
     res.status(400).json({ message: error.message });
   }
 };

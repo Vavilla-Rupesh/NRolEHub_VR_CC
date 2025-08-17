@@ -1,28 +1,96 @@
 import React, { useState } from 'react';
-import { User, Mail, Shield, Key, Edit3, Save, X, Camera } from 'lucide-react';
+import { User, Mail, Shield, Key, Edit3, Save, X, Camera, Upload } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import toast from 'react-hot-toast';
 import api from '../../../lib/api';
 
 function AdminProfile() {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [formData, setFormData] = useState({
     username: user?.username || '',
-    email: user?.email || '',
     currentPassword: '',
     newPassword: '',
     confirmPassword: ''
   });
 
-  const handleSubmit = async (e) => {
+  const handleProfileUpdate = async (e) => {
     e.preventDefault();
     try {
-      // Add API call to update profile
+      const response = await api.put('/auth/profile', {
+        username: formData.username
+      });
+      
+      // Update user context
+      setUser(response.data.user);
       toast.success('Profile updated successfully');
       setIsEditing(false);
     } catch (error) {
-      toast.error('Failed to update profile');
+      toast.error(error.response?.data?.message || 'Failed to update profile');
+    }
+  };
+
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    
+    if (formData.newPassword !== formData.confirmPassword) {
+      toast.error('New passwords do not match');
+      return;
+    }
+    
+    try {
+      await api.put('/auth/profile/password', {
+        currentPassword: formData.currentPassword,
+        newPassword: formData.newPassword
+      });
+      
+      toast.success('Password changed successfully');
+      setFormData({
+        ...formData,
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      });
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to change password');
+    }
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please upload an image file');
+      return;
+    }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size should be less than 5MB');
+      return;
+    }
+
+    try {
+      setUploadingImage(true);
+      const formData = new FormData();
+      formData.append('profile_image', file);
+      
+      const response = await api.post('/auth/profile/image', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      
+      // Update user context
+      setUser(response.data.user);
+      toast.success('Profile image updated successfully');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to upload image');
+    } finally {
+      setUploadingImage(false);
     }
   };
 
@@ -55,13 +123,32 @@ function AdminProfile() {
               {/* Profile Picture Section */}
               <div className="relative flex flex-col items-center text-center mb-6">
                 <div className="relative group/avatar cursor-pointer">
-                  <div className="h-32 w-32 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-emerald-500 p-1 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <label className="h-32 w-32 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-emerald-500 p-1 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer block">
                     <div className="h-full w-full rounded-full bg-white dark:bg-gray-800 flex items-center justify-center">
-                      <Shield className="h-16 w-16 text-gray-500 bg-gradient-to-br from-blue-500 via-purple-500 to-emerald-500 bg-clip-text" />
+                      {user?.profile_image ? (
+                        <img 
+                          src={user.profile_image} 
+                          alt="Profile" 
+                          className="h-full w-full rounded-full object-cover"
+                        />
+                      ) : (
+                        <Shield className="h-16 w-16 text-gray-500 bg-gradient-to-br from-blue-500 via-purple-500 to-emerald-500 bg-clip-text" />
+                      )}
                     </div>
-                  </div>
-                  <div className="absolute inset-0 rounded-full bg-black/20 opacity-0 group-hover/avatar:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <Camera className="h-8 w-8 text-white" />
+                    <input
+                      type="file"
+                      className="hidden"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      disabled={uploadingImage}
+                    />
+                  </label>
+                  <div className="absolute inset-0 rounded-full bg-black/20 opacity-0 group-hover/avatar:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                    {uploadingImage ? (
+                      <div className="animate-spin rounded-full h-8 w-8 border-2 border-white border-t-transparent"></div>
+                    ) : (
+                      <Camera className="h-8 w-8 text-white" />
+                    )}
                   </div>
                 </div>
                 
@@ -123,6 +210,7 @@ function AdminProfile() {
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleProfileUpdate} className="space-y-8">
                   {/* Basic Information */}
                   <div className="space-y-6">
                     <div className="group">
@@ -149,34 +237,34 @@ function AdminProfile() {
                       </div>
                     </div>
 
+                    {/* Email Display (Read-only) */}
                     <div className="group">
                       <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3 flex items-center space-x-2">
                         <Mail className="h-4 w-4 text-emerald-500" />
-                        <span>Email Address</span>
+                        <span>Email Address (Read-only)</span>
                       </label>
                       <div className="relative">
-                        <input
-                          type="email"
-                          className={`w-full px-4 py-4 rounded-xl border-2 transition-all duration-300 bg-gray-50/50 dark:bg-gray-900/50 backdrop-blur-sm ${
-                            isEditing
-                              ? 'border-emerald-300 dark:border-emerald-600 focus:border-emerald-500 dark:focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/20'
-                              : 'border-gray-200 dark:border-gray-700'
-                          } text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none`}
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          disabled={!isEditing}
-                          placeholder="Enter your email address"
-                        />
-                        <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-emerald-500/10 to-blue-500/10 pointer-events-none transition-opacity duration-300 ${
-                          isEditing ? 'opacity-100' : 'opacity-0'
-                        }`}></div>
+                        <div className="w-full px-4 py-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-gray-100/50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-400">
+                          {user?.email || 'admin@example.com'}
+                        </div>
                       </div>
                     </div>
+
+                    {/* Update Profile Button */}
+                    {isEditing && (
+                      <button
+                        type="submit"
+                        className="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-bold rounded-xl transition-all duration-300 hover:scale-[1.02] shadow-lg"
+                      >
+                        Update Profile
+                      </button>
+                    )}
                   </div>
+                </form>
 
                   {/* Password Section */}
                   {isEditing && (
-                    <div className="space-y-6 pt-6 border-t border-gray-200/50 dark:border-gray-700/50 animate-fade-in-up">
+                    <form onSubmit={handlePasswordChange} className="space-y-6 pt-6 border-t border-gray-200/50 dark:border-gray-700/50 animate-fade-in-up">
                       <div className="flex items-center space-x-2 mb-4">
                         <Key className="h-5 w-5 text-purple-500" />
                         <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Change Password</h3>
@@ -225,22 +313,21 @@ function AdminProfile() {
                         </div>
                       </div>
 
-                      {/* Save Button */}
+                      {/* Change Password Button */}
                       <div className="pt-6">
                         <button
                           type="submit"
-                          className="group relative overflow-hidden w-full sm:w-auto px-8 py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 via-purple-500 to-emerald-500 hover:from-blue-600 hover:via-purple-600 hover:to-emerald-600 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-500/20"
+                          className="group relative overflow-hidden w-full sm:w-auto px-8 py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-500/20"
                         >
                           <span className="relative z-10 flex items-center justify-center space-x-2">
-                            <Save className="h-5 w-5" />
-                            <span>Save Changes</span>
+                            <Key className="h-5 w-5" />
+                            <span>Change Password</span>
                           </span>
                           <div className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
                         </button>
                       </div>
-                    </div>
+                    </form>
                   )}
-                </form>
               </div>
             </div>
           </div>

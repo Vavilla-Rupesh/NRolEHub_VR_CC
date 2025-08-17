@@ -80,6 +80,14 @@ const User = sequelize.define('User', {
         type: DataTypes.DATE,
         allowNull: true
     },
+    profile_image: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        get() {
+            const rawValue = this.getDataValue('profile_image');
+            return rawValue ? `/uploads/profiles/${rawValue}` : null;
+        }
+    },
     total_app_points: {
         type: DataTypes.INTEGER,
         defaultValue: 0

@@ -20,11 +20,14 @@ app.use(cors());
 
 // ===== Create uploads directory if it doesn't exist =====
 const uploadsDir = path.join(__dirname, 'public', 'uploads', 'events');
+const profilesDir = path.join(__dirname, 'public', 'uploads', 'profiles');
 fs.mkdirSync(uploadsDir, { recursive: true });
+fs.mkdirSync(profilesDir, { recursive: true });
 
 // ===== Serve uploaded files statically =====
 // This makes files accessible via /uploads/events/<filename>
 app.use('/uploads/events', express.static(uploadsDir));
+app.use('/uploads/profiles', express.static(profilesDir));
 
 // ===== Serve receipt files statically =====
 const receiptsDir = path.join(__dirname, 'receipts');

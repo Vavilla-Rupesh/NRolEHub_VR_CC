@@ -13,6 +13,11 @@ const { Op } = require('sequelize');
 exports.createTeam = async (teamData) => {
   const transaction = await sequelize.transaction();
   try {
+    // Validate team name
+    if (!teamData.name || !teamData.name.trim()) {
+      throw new Error('Team name is required');
+    }
+
     // Create team
     const team = await Team.create(teamData, { transaction });
 

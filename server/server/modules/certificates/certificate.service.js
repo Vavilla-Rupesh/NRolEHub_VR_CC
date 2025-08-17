@@ -630,7 +630,11 @@ exports.generateBulkCertificates = async (inputs) => {
 
     for (const student of students) {
       try {
-        const eventName = student.event_name;
+        // Combine main event and sub-event names
+        const mainEventName = event.event_name;
+        const subEventName = subevent.title;
+        const combinedEventName = `${mainEventName} - ${subEventName}`;
+        
         const email = student.student_email;
         const name = student.student_name;
         const certificateDate = new Date().toLocaleDateString();
@@ -639,21 +643,21 @@ exports.generateBulkCertificates = async (inputs) => {
           attributes: ['roll_number', 'year', 'semester', 'college_name','stream']
         });
 
-        if (!eventName || !email || !name) {
-          console.error('Missing required data:', { eventName, email, name });
+        if (!combinedEventName || !email || !name) {
+          console.error('Missing required data:', { combinedEventName, email, name });
           continue;
         }
 
         const certificateId = generateCertificateId(event, subevent, student, student.rank);
         const fileName = generateFileName(certificateId, name);
-        const outputDir = path.join(baseDir, eventName.replace(/[^a-zA-Z0-9]/g, '_'));
+        const outputDir = path.join(baseDir, mainEventName.replace(/[^a-zA-Z0-9]/g, '_'));
         await fs.mkdir(outputDir, { recursive: true });
         const outputPath = path.join(outputDir, fileName);
 
         const certificateBuffer = await overlayTextOnImage(
           templateImageBuffer,
           name,
-          eventName,
+          combinedEventName,
           certificateDate,
           coordinates,
           certificateId,
@@ -685,7 +689,7 @@ exports.generateBulkCertificates = async (inputs) => {
         }, { transaction });
 
         const isWinner = templateType === 'merit' && student.rank;
-        await sendCertificateEmail(email, outputPath, name, eventName, isWinner);
+        await sendCertificateEmail(email, outputPath, name, combinedEventName, isWinner);
       } catch (err) {
         console.error('Error processing certificate:', err);
       }

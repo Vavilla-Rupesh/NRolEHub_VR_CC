@@ -11,7 +11,11 @@ const Team = sequelize.define('Team', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: true,
+        validate: {
+            notEmpty: true,
+            len: [1, 100]
+        }
     },
     event_id: {
         type: DataTypes.INTEGER,

@@ -673,11 +673,11 @@ export default function CertificatePreview({
 
                         switch (field) {
                           case 'teamName':
-                            content = 'Team Awesome';
+                            content = 'Team Dawn Riders';
                             className += 'text-lg sm:text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100';
                             break;
                           case 'name':
-                            content = 'John Doe';
+                            content = 'Narayana';
                             className += 'text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100';
                             break;
                           case 'year':
@@ -693,19 +693,19 @@ export default function CertificatePreview({
                             className += 'text-sm sm:text-base md:text-lg text-slate-700 dark:text-slate-200';
                             break;
                           case 'rollNumber':
-                            content = '21CSE12345';
+                            content = '21711A0500';
                             className += 'text-sm sm:text-base text-slate-600 dark:text-slate-300';
                             break;
                           case 'college':
-                            content = 'ABC Institute of Technology';
+                            content = 'Narayana Engineering College';
                             className += 'text-sm sm:text-base md:text-lg text-slate-700 dark:text-slate-200';
                             break;
                           case 'event':
-                            content = 'Web Development Workshop';
+                            content = 'Hackathon - Hackademia 2K24';
                             className += 'text-lg sm:text-xl md:text-2xl font-semibold text-slate-800 dark:text-slate-100';
                             break;
                           case 'date':
-                            content = 'March 15, 2024';
+                            content = 'October 5, 2024';
                             className += 'text-base sm:text-lg md:text-xl text-slate-700 dark:text-slate-200';
                             break;
                           case 'certificateId':

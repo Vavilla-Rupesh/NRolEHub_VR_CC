@@ -25,7 +25,7 @@ import { useAuth } from "../../../contexts/AuthContext";
 import api from "../../../lib/api";
 import { cn } from "../../../lib/utils";
 import { formatDate } from "../../../lib/utils";
-
+import toast from "react-hot-toast";
 function StudentProfile() {
   const { user, setUser } = useAuth();
   const [registeredEvents, setRegisteredEvents] = useState([]);

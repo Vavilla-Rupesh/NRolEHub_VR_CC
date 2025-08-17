@@ -103,19 +103,25 @@ export default function PremiumLandingPage() {
             ></div>
 
             {/* Banner Content */}
-            <div className="relative z-10 h-full flex flex-col items-center justify-center text-center space-y-4 px-6">
+            <div className="relative z-10 h-full flex flex-col items-center text-center space-y-4">
+              <img
+                src="../banner.png"
+                alt="Narayana Banner"
+                className="w-full object-contain"
+                style={{ marginTop: 0 }}
+              />
               <h1 className="text-5xl md:text-7xl font-black text-slate-900 dark:text-white leading-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400">
-                NARAYANA
+                NRolEHub
               </h1>
-              <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-white">
-                Engineering College
+              <h2 className="text-3xl md:text-4xl font-bold text-blue-600 dark:text-cyan-400 mt-6">
+                Narayana Engineering College
               </h2>
               <p className="text-lg md:text-xl text-slate-700 dark:text-slate-300 max-w-2xl font-light">
                 Pioneering excellence in engineering education since 2001
               </p>
-              <h2 className="text-3xl md:text-4xl font-bold text-blue-600 dark:text-cyan-400 mt-6">
-                NRolEHub
-              </h2>
+              {/* <h2 className="text-3xl md:text-4xl font-bold text-blue-600 dark:text-cyan-400 mt-6">
+                Narayana Engineering College
+              </h2> */}
             </div>
           </div>
         </div>

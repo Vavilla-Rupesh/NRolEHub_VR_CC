@@ -122,9 +122,6 @@ export default function PremiumLandingPage() {
               <h2 className="text-3xl md:text-4xl font-bold text-blue-600 dark:text-cyan-400 mt-6">
                 Narayana Engineering College
               </h2>
-              <p className="text-lg md:text-xl text-slate-700 dark:text-slate-300 max-w-2xl font-light">
-                Pioneering excellence in engineering education since 2001
-              </p>
               {/* <h2 className="text-3xl md:text-4xl font-bold text-blue-600 dark:text-cyan-400 mt-6">
                 Narayana Engineering College
               </h2> */}

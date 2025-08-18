@@ -214,7 +214,7 @@ export default function CertificateVerification() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-purple-50 dark:from-gray-900 dark:via-slate-900 dark:to-violet-900/20 relative overflow-hidden">
+    <div className="min-h-screen from-violet-50 via-white to-purple-50 dark:from-gray-900 dark:via-slate-900 dark:to-violet-900/20 relative overflow-hidden">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-violet-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>

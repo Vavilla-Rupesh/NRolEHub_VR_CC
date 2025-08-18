@@ -15,7 +15,7 @@ import * as XLSX from 'xlsx';
 import { formatDate } from '../../lib/utils';
 import LoadingSpinner from '../shared/LoadingSpinner';
 import { cn } from '../../lib/utils';
-
+import Footer from '../shared/Footer';
 export default function CertificateVerification() {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -583,7 +583,7 @@ export default function CertificateVerification() {
           </div>
         </div>
       </div>
-      
+      <Footer />
       {/* Custom CSS for animations */}
       <style jsx>{`
         @keyframes fade-in-up {

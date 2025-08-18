@@ -9,7 +9,7 @@ import {
   Sparkles,
   ChevronDown,
 } from "lucide-react";
-
+import Footer from "./shared/Footer.jsx";
 export default function PremiumLandingPage() {
   const [scrollY, setScrollY] = useState(0);
 
@@ -281,7 +281,7 @@ export default function PremiumLandingPage() {
           </div>
         </div>
       </div>
-
+<Footer />
       {/* Custom Styles */}
       <style jsx>{`
         @keyframes float {

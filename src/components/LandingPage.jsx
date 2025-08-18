@@ -74,7 +74,7 @@ export default function PremiumLandingPage() {
       <div className="relative z-10">
         <div className="w-full overflow-hidden">
           <div
-            className="relative h-80"
+            className="relative h-auto mt-5 mb-10"
             style={{
               transform: `translateY(${scrollY * 0.3}px)`,
               WebkitMaskImage:

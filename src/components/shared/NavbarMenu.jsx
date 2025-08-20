@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { 
@@ -10,6 +10,7 @@ import {
   MessageSquare,
   CalendarDays,
   Shield,
+  Bell,
 } from 'lucide-react';
 
 export default function NavbarMenu({ isMobile = false }) {
@@ -19,7 +20,7 @@ export default function NavbarMenu({ isMobile = false }) {
     { label: 'Dashboard', path: '/admin', icon: LayoutDashboard },
     { label: 'Events', path: '/admin/events', icon: Calendar },
     { label: 'Students', path: '/admin/students', icon: Users },
-    { label: 'Complaints', path: '/admin/complaints', icon: MessageSquare }
+    { label: 'Complaints', path: '/admin/complaints', icon: MessageSquare },
   ];
 
   const superAdminMenuItems = [
@@ -38,9 +39,10 @@ export default function NavbarMenu({ isMobile = false }) {
                    user?.role === 'admin' ? adminMenuItems :
                    user?.role === 'student' ? studentMenuItems : [];
 
+  // Updated className with better spacing and flex properties
   const className = isMobile
-    ? 'flex flex-col space-y-4'
-    : 'hidden md:flex md:space-x-8';
+    ? 'flex flex-col space-y-3 w-full'
+    : 'hidden md:flex md:items-center md:space-x-4 lg:space-x-6 xl:space-x-8 md:flex-wrap md:justify-end md:flex-1';
 
   return (
     <>
@@ -70,10 +72,10 @@ export default function NavbarMenu({ isMobile = false }) {
           display: flex;
           align-items: center;
           space-x: 0.5rem;
-          padding: 0.75rem 1.25rem;
-          border-radius: 0.75rem;
-          font-weight: 600;
-          font-size: 0.95rem;
+          padding: 0.5rem 0.75rem;
+          border-radius: 0.5rem;
+          font-weight: 700;
+          font-size: 1.125rem;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           overflow: hidden;
           background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
@@ -83,6 +85,8 @@ export default function NavbarMenu({ isMobile = false }) {
           color: #374151;
           text-decoration: none;
           animation: slideIn 0.5s ease-out;
+          white-space: nowrap;
+          flex-shrink: 0;
         }
         
         .premium-nav-link:nth-child(1) { animation-delay: 0.1s; }
@@ -90,6 +94,8 @@ export default function NavbarMenu({ isMobile = false }) {
         .premium-nav-link:nth-child(3) { animation-delay: 0.3s; }
         .premium-nav-link:nth-child(4) { animation-delay: 0.4s; }
         .premium-nav-link:nth-child(5) { animation-delay: 0.5s; }
+        .premium-nav-link:nth-child(6) { animation-delay: 0.6s; }
+        .premium-nav-link:nth-child(7) { animation-delay: 0.7s; }
         
         .dark .premium-nav-link {
           background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
@@ -118,14 +124,13 @@ export default function NavbarMenu({ isMobile = false }) {
         }
         
         .premium-nav-link:hover {
-          transform: translateY(-3px) scale(1.02);
+          transform: translateY(-2px) scale(1.01);
           background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.1));
           border-color: rgba(99, 102, 241, 0.3);
           box-shadow: 
-            0 10px 25px rgba(0, 0, 0, 0.15),
-            0 0 20px rgba(99, 102, 241, 0.2);
+            0 8px 20px rgba(0, 0, 0, 0.1),
+            0 0 15px rgba(99, 102, 241, 0.2);
           color: #6366f1;
-          animation: glow 2s ease-in-out infinite;
         }
         
         .dark .premium-nav-link:hover {
@@ -133,38 +138,39 @@ export default function NavbarMenu({ isMobile = false }) {
           border-color: rgba(139, 92, 246, 0.4);
           color: #a78bfa;
           box-shadow: 
-            0 10px 25px rgba(0, 0, 0, 0.3),
-            0 0 20px rgba(139, 92, 246, 0.3);
+            0 8px 20px rgba(0, 0, 0, 0.2),
+            0 0 15px rgba(139, 92, 246, 0.3);
         }
         
         .premium-nav-link:active {
-          transform: translateY(-1px) scale(1.01);
+          transform: translateY(-1px) scale(1.0);
         }
 
         .nav-icon {
-          width: 1.25rem;
-          height: 1.25rem;
-          margin-right: 0.5rem;
+          width: 1rem;
+          height: 1rem;
+          margin-right: 0.375rem;
           transition: all 0.3s ease;
-          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+          filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+          flex-shrink: 0;
         }
         
         .premium-nav-link:hover .nav-icon {
           animation: bounce-subtle 0.6s ease-in-out;
-          filter: drop-shadow(0 4px 8px rgba(99, 102, 241, 0.3));
+          filter: drop-shadow(0 2px 4px rgba(99, 102, 241, 0.3));
         }
 
         .role-badge {
           position: absolute;
-          top: -8px;
-          right: -8px;
-          width: 20px;
-          height: 20px;
+          top: -6px;
+          right: -6px;
+          width: 16px;
+          height: 16px;
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 10px;
+          font-size: 8px;
           font-weight: bold;
           color: white;
           animation: glow 2s ease-in-out infinite;
@@ -197,17 +203,20 @@ export default function NavbarMenu({ isMobile = false }) {
 
         .auth-links {
           display: flex;
-          gap: 0.75rem;
+          gap: 0.5rem;
+          align-items: center;
         }
         
         .auth-link {
           position: relative;
-          padding: 0.75rem 1.5rem;
-          border-radius: 0.75rem;
-          font-weight: 600;
+          padding: 0.5rem 1rem;
+          border-radius: 0.5rem;
+          font-weight: 500;
+          font-size: 0.875rem;
           text-decoration: none;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           overflow: hidden;
+          white-space: nowrap;
         }
         
         .login-link {
@@ -218,8 +227,8 @@ export default function NavbarMenu({ isMobile = false }) {
         
         .login-link:hover {
           background: linear-gradient(135deg, #1d4ed8, #1e40af);
-          transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
         
         .register-link {
@@ -230,8 +239,8 @@ export default function NavbarMenu({ isMobile = false }) {
         
         .register-link:hover {
           background: linear-gradient(135deg, #059669, #047857);
-          transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
         }
 
         .mobile-auth-links {
@@ -258,7 +267,42 @@ export default function NavbarMenu({ isMobile = false }) {
           color: #e5e7eb;
         }
 
-        /* Responsive improvements */
+        /* Responsive improvements for better logo/title visibility */
+        @media (max-width: 1280px) {
+          .premium-nav-link {
+            padding: 0.4rem 0.6rem;
+            font-size: 0.8rem;
+          }
+          
+          .nav-icon {
+            width: 0.875rem;
+            height: 0.875rem;
+            margin-right: 0.25rem;
+          }
+          
+          .auth-link {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+          }
+        }
+
+        @media (max-width: 1024px) {
+          .premium-nav-link {
+            padding: 0.375rem 0.5rem;
+            font-size: 0.75rem;
+          }
+          
+          .nav-icon {
+            width: 0.75rem;
+            height: 0.75rem;
+          }
+          
+          .auth-link {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+          }
+        }
+
         @media (max-width: 768px) {
           .premium-nav-link {
             padding: 0.65rem 1rem;
@@ -268,7 +312,33 @@ export default function NavbarMenu({ isMobile = false }) {
           .nav-icon {
             width: 1.1rem;
             height: 1.1rem;
+            margin-right: 0.5rem;
           }
+        }
+
+        /* Ensure navbar doesn't overflow and wraps properly */
+        .navbar-container {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          min-height: 4rem;
+        }
+
+        /* Compact mode for admin panels with many items */
+        .compact-nav {
+          gap: 0.25rem !important;
+        }
+        
+        .compact-nav .premium-nav-link {
+          padding: 0.375rem 0.5rem !important;
+          font-size: 0.75rem !important;
+        }
+        
+        .compact-nav .nav-icon {
+          width: 0.875rem !important;
+          height: 0.875rem !important;
+          margin-right: 0.25rem !important;
         }
       `}</style>
       
@@ -295,17 +365,20 @@ export default function NavbarMenu({ isMobile = false }) {
               </div>
             )}
             
-            {menuItems.map((item, index) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className="premium-nav-link"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <item.icon className="nav-icon" />
-                <span>{item.label}</span>
-              </Link>
-            ))}
+            {/* Apply compact mode for admin/super_admin with many menu items */}
+            <div className={`${!isMobile && (user.role === 'admin' || user.role === 'super_admin') ? 'compact-nav' : ''} ${isMobile ? 'flex flex-col space-y-3' : 'flex items-center space-x-2'}`}>
+              {menuItems.map((item, index) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className="premium-nav-link"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <item.icon className="nav-icon" />
+                  <span>{item.label}</span>
+                </Link>
+              ))}
+            </div>
           </>
         ) : (
           // Display Login and Register options when user is not logged in

@@ -41,5 +41,6 @@ export const ROUTES = {
     CERTIFICATES: '/student/certificates',
     SUPPORT: '/student/support',
     PROFILE: '/student/profile',
+    POINTS: '/student/points',
   },
 };

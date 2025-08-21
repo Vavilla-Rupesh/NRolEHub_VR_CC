@@ -729,7 +729,6 @@ const { sendEmailWithAttachment } = require('../../utils/mailer');
 const StudentRegistration = require('../events/studentRegistration.model');
 const Leaderboard = require('../leaderboard/leaderboard.model');
 const { Op } = require('sequelize');
-const InWebNotificationService = require('../inwebnotifications/inwebnotification.service');
 
 function generateCertificateId(event, subevent, registration, rank = null) {
   const timestamp = Date.now().toString(36);

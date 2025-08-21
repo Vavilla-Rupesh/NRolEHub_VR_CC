@@ -91,6 +91,7 @@ return;
       formData.append('pdfFileInput', template.file);
       formData.append('event_id', eventId);
       formData.append('subevent_id', subEventId);
+      formData.append('is_team_event', true);
       
       // Add positions with original image coordinates
       Object.entries(template.positions).forEach(([key, value]) => {

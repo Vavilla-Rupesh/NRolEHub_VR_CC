@@ -1,4 +1,4 @@
-// import React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { 
@@ -32,7 +32,8 @@ export default function NavbarMenu({ isMobile = false }) {
     { label: 'Dashboard', path: '/student', icon: LayoutDashboard },
     { label: 'Events', path: '/student/events', icon: Calendar },
     { label: 'Calendar', path: '/student/calendar', icon: CalendarDays },
-    { label: 'My Events', path: '/student/my-events', icon: Users }
+    { label: 'My Events', path: '/student/my-events', icon: Users },
+    { label: 'Points', path: '/student/points', icon: Award },
   ];
 
   const menuItems = user?.role === 'super_admin' ? superAdminMenuItems :

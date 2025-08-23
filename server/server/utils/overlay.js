@@ -278,7 +278,7 @@ async function overlayTextOnImage(imageBuffer, name, eventName, certificateDate,
           
           /* Participant name - most prominent */
           .name { 
-            font-size: 52px; 
+            font-size: 28px; 
             font-weight: bold; 
             font-family: 'Times New Roman', 'Georgia', serif;
             fill: #2c3e50;
@@ -287,7 +287,7 @@ async function overlayTextOnImage(imageBuffer, name, eventName, certificateDate,
           
           /* Event title - secondary prominence */
           .event { 
-            font-size: 38px; 
+            font-size: 26px; 
             font-weight: 600;
             font-family: 'Arial', 'Helvetica', sans-serif;
             fill: #34495e;
@@ -297,7 +297,7 @@ async function overlayTextOnImage(imageBuffer, name, eventName, certificateDate,
           
           /* Achievement/Rank - highlighted */
           .rank { 
-            font-size: 42px; 
+            font-size: 26px; 
             font-weight: bold; 
             font-family: 'Arial', 'Helvetica', sans-serif;
             fill: #e74c3c;
@@ -341,10 +341,10 @@ async function overlayTextOnImage(imageBuffer, name, eventName, certificateDate,
           
           /* Certificate ID */
           .id { 
-            font-size: 14px; 
+            font-size: 20px; 
+            font-weight: 500;
             font-family: 'Courier New', monospace;
             fill: #95a5a6;
-            font-weight: normal;
             letter-spacing: 1px;
           }
           

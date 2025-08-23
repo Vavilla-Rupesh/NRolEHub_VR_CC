@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "concurrently \"vite\" \"npm run server\"",
     "server": "cd server/server && node server.js",
+    "prebuild": "npx update-browserslist-db@latest",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

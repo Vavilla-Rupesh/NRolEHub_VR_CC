@@ -585,8 +585,8 @@ function PaidEventCard({ registration }) {
       const response = await api.get(`/leaderboard/${registration.event_id}`, {
         params: { subevent_id: registration.subevent_id },
       });
-
-      const sortedLeaderboard = response.data
+      const filteredData = response.data.filter((entry) => entry.score > 0);
+      const sortedLeaderboard = filteredData
         .sort((a, b) => b.score - a.score)
         .map((entry, index) => ({
           ...entry,
@@ -596,12 +596,12 @@ function PaidEventCard({ registration }) {
 
       setIndividualLeaderboard(sortedLeaderboard);
 
-      const userEntry = response.data.find(
+      const userEntry = filteredData.find(
         (entry) => entry.student_id === registration.student_id
       );
       if (userEntry) {
         const rank =
-          response.data.findIndex(
+          filteredData.findIndex(
             (entry) => entry.student_id === registration.student_id
           ) + 1;
         setIndividualRank(rank);

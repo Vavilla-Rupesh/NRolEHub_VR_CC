@@ -343,8 +343,8 @@ async function overlayTextOnImage(imageBuffer, name, eventName, certificateDate,
           .id { 
             font-size: 20px; 
             font-weight: 500;
-            font-family: 'Courier New', monospace;
-            fill: #95a5a6;
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            fill: #2c3e50;
             letter-spacing: 1px;
           }
           
